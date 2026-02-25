@@ -1,0 +1,22 @@
+<nav class="flex fixed top-0 w-full border-b border-border bg-background px-6 py-4">
+  <div class="container flex items-center justify-between">
+    <div class="flex gap-2">
+      <h1 class="font-semibold text-xl tracking-tight text-foreground">
+        Tare<span class="text-pink-500">ff</span>a
+      </h1>
+      <button
+        z-button
+        zType="ghost"
+        zSize="sm"
+        zTooltip="Made for Ottimizza front-end test by github.com/vinisooo"
+        zPosition="bottom"
+      >
+        <z-icon zType="code-xml" [zStrokeWidth]="1" />
+      </button>
+    </div>
+
+    <div class="flex items-center">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</nav>

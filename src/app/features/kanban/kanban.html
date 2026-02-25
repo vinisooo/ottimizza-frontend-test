@@ -1,0 +1,34 @@
+<app-nav-bar>
+  <button z-button zType="ghost" (click)="goBack()">
+    <i z-icon zType="arrow-left"></i>
+    Voltar
+  </button>
+</app-nav-bar>
+
+<main class="container py-24 px-8">
+  @if (board(); as board) {
+    <div class="flex mb-6 gap-2 items-center">
+      <h2 class="font-semibold text-xl">{{ board.name }}</h2>
+      <z-badge zType="default">Kanban</z-badge>
+    </div>
+  }
+
+  <div
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="columns()"
+    (cdkDropListDropped)="onColumnDropped($event)"
+    class="flex gap-4 overflow-x-auto pb-4"
+  >
+    @for (column of columns(); track column.id) {
+      <app-kanban-column
+        [column]="column"
+        [tasks]="tasksByColumn()[column.id]"
+        [connectedTo]="columnIds()"
+        (taskDropped)="onTaskDropped($event)"
+      />
+    }
+
+    <app-kanban-column-create [boardId]="boardId" [columnCount]="columns().length" />
+  </div>
+</main>

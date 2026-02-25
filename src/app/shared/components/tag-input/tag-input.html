@@ -1,0 +1,25 @@
+<div class="flex gap-2">
+  <input
+    z-input
+    zSize="sm"
+    [value]="currentTag()"
+    (input)="onInput($event)"
+    (keydown.enter)="addTag(); $event.preventDefault()"
+    placeholder="Ex: frontend"
+    class="flex-1"
+  />
+  <button z-button zType="outline" zSize="sm" type="button" (click)="addTag()">Adicionar</button>
+</div>
+
+@if (tags().length) {
+  <div class="mt-2 flex flex-wrap gap-1">
+    @for (tag of tags(); track $index) {
+      <z-badge zType="secondary" zShape="pill" class="flex items-center gap-1">
+        {{ tag }}
+        <button type="button" class="ml-1 hover:text-destructive" (click)="removeTag($index)">
+          <i z-icon zType="x" class="size-3"></i>
+        </button>
+      </z-badge>
+    }
+  </div>
+}

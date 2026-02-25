@@ -1,59 +1,71 @@
-# OttimizaFront
+# Ottimizza Front
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.5.
+Teste tecnico para vaga de front-end na Ottimizza. Um kanban board com suporte offline-first.
 
-## Development server
+## O que foi feito
 
-To start a local development server, run:
+Uma aplicacao de gerenciamento de boards no estilo kanban. O usuario pode criar boards, e dentro de cada board pode criar colunas e tarefas, mover tudo por drag-and-drop (colunas na horizontal, tarefas na vertical e entre colunas), editar e excluir.
 
-```bash
-ng serve
+O diferencial ta na parte offline. Tudo funciona sem conexao com a API. Cria, edita, exclui, reordena, e quando a conexao volta, sincroniza automaticamente com o servidor.
+
+## Stack
+
+- **Angular 21** — zoneless, sem zone.js, change detection via signals
+- **Angular CDK** — drag-and-drop pra colunas e tarefas
+- **Tailwind CSS 4** — estilizacao utility-first com variaveis CSS pra tema claro/escuro
+- **IndexedDB** (via `idb`) — persistencia local dos dados
+- **Lucide** — icones
+- **Zard UI** — design system proprio inspirado no shadcn/ui, usando `class-variance-authority` pra variantes
+
+## Arquitetura
+
+```
+src/app/
+├── features/           # Paginas e componentes de cada feature
+│   ├── board/          # Listagem de boards com CRUD
+│   └── kanban/         # Visualizacao kanban com colunas e tarefas
+└── shared/
+    ├── components/     # Design system proprio (Zard) — button, dialog, input, card, etc
+    ├── constants/      # Configuracoes centralizadas (URL da API)
+    ├── core/           # Providers e diretivas base
+    ├── offline/        # Toda a logica offline-first
+    ├── services/       # HTTP services e stores
+    ├── types/          # Interfaces de dominio
+    └── utils/          # Utilitarios (merge de classes, etc)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Offline-first
 
-## Code scaffolding
+A ideia foi que a aplicacao funcione independente do estado da API. A estrutura:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Stores** (`BoardStore`, `ColumnStore`, `TaskStore`) — cada operacao grava primeiro no IndexedDB, atualiza o signal, e enfileira a sync. Se a API ta online, processa na hora. Se nao, espera.
+- **SyncQueueService** — fila de operacoes pendentes. Quando volta a conexao, processa na ordem de timestamp. Lida com mapeamento de IDs temporarios pra IDs reais do servidor.
+- **SyncEngineService** — orquestra retry periodico (30s) enquanto tiver operacoes pendentes.
+- **NetworkStatusService** — detecta se ta offline via eventos do browser + health check periodico na API.
+- **offlineInterceptor** — intercepta respostas HTTP com status 0, 502, 503, 504 e marca como offline.
 
-```bash
-ng generate component component-name
-```
+O fluxo: o usuario cria uma tarefa → grava no IDB com ID temporario → signal atualiza → UI reflete instantaneamente → operacao entra na fila → quando online, envia pro servidor → servidor retorna ID real → IDB atualiza o ID.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Reconciliacao
 
-```bash
-ng generate --help
-```
+Quando a conexao volta, cada store faz reconciliacao: busca dados remotos, compara com locais, e mescla respeitando operacoes pendentes na fila. Isso garante que dados criados offline nao sejam sobrescritos.
 
-## Building
+### Design system
 
-To build the project run:
+Componentes proprios com a lib `class-variance-authority` pra gerenciar variantes (tipo, tamanho, estado). O padrao segue o que o shadcn/ui faz mas adaptado pra Angular com signals e `ViewEncapsulation.None`.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Como rodar
 
 ```bash
-ng test
+npm install
+npm start
 ```
 
-## Running end-to-end tests
+A API precisa estar rodando em `http://localhost:8080` (provida pela equipe de desenvolvimento da Ottimizza).
 
-For end-to-end (e2e) testing, run:
+## Lint e formatacao
 
 ```bash
-ng e2e
+npm run lint        # ESLint
+npm run format      # Prettier
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

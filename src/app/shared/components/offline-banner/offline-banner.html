@@ -1,0 +1,10 @@
+@if (isOffline()) {
+  <div class="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 animate-in fade-in slide-in-from-bottom-4">
+    <z-alert zType="warning" class="w-max shadow-lg">
+      <z-alert-title>Você está offline</z-alert-title>
+      <z-alert-description>
+        Suas alterações serão sincronizadas quando a conexão voltar.
+      </z-alert-description>
+    </z-alert>
+  </div>
+}

@@ -1,0 +1,6 @@
+<z-card [zTitle]="board().name" zAction="Acessar" (zActionClick)="onAccess()">
+  <z-button-group>
+    <app-board-project-edit [board]="board()" />
+    <app-board-project-delete [board]="board()" />
+  </z-button-group>
+</z-card>

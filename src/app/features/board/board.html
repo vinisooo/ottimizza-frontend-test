@@ -1,0 +1,25 @@
+<app-nav-bar>
+  <app-board-project-create />
+</app-nav-bar>
+
+<main class="container py-24 px-8">
+  <div class="title">
+    <h2 class="font-semibold text-xl">Boards</h2>
+    <p class="text-muted-foreground">Gerencie seus boards</p>
+  </div>
+
+  @if (boards().length) {
+    <div class="grid grid-cols-4 gap-4 mt-6">
+      @for (board of boards(); track board.id) {
+        <app-board-project [board]="board" />
+      }
+    </div>
+  } @else {
+    <div class="w-full p-32 flex flex-col gap-4 items-center justify-center">
+      <p class="text-muted-foreground">
+        Voce ainda nao possui projetos criados. Que tal criar o primeiro?
+      </p>
+      <app-board-project-create />
+    </div>
+  }
+</main>

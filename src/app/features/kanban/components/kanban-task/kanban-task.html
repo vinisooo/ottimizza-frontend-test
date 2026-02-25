@@ -1,0 +1,36 @@
+<div
+  cdkDrag
+  class="rounded-lg border border-border bg-card p-3 shadow-sm cursor-grab active:cursor-grabbing"
+>
+  <div class="flex items-start justify-between gap-2">
+    <p class="text-sm font-medium">{{ task().name }}</p>
+    <div class="flex shrink-0 gap-0.5">
+      <app-kanban-task-edit [task]="task()" [columnId]="columnId()" />
+      <app-kanban-task-delete [task]="task()" />
+    </div>
+  </div>
+
+  <div class="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+    @if (task().dueDate) {
+      <span class="flex items-center gap-1">
+        <i z-icon zType="calendar" class="size-3"></i>
+        {{ task().dueDate }}
+      </span>
+    }
+
+    @if (task().completed) {
+      <span class="flex items-center gap-1 text-green-600">
+        <i z-icon zType="circle-check" class="size-3"></i>
+        Concluída
+      </span>
+    }
+  </div>
+
+  @if (task().tags.length) {
+    <div class="mt-2 flex flex-wrap gap-1">
+      @for (tag of task().tags; track tag) {
+        <z-badge zType="secondary" zShape="pill">{{ tag }}</z-badge>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,20 @@
+<form [formGroup]="form" class="grid gap-4">
+  <label class="grid gap-3">
+    <span class="flex items-center gap-2 text-sm leading-none font-medium select-none">
+      Nome da tarefa
+    </span>
+    <input z-input formControlName="name" placeholder="Ex: Implementar login" />
+  </label>
+  <label class="grid gap-3">
+    <span class="flex items-center gap-2 text-sm leading-none font-medium select-none">
+      Data de entrega
+    </span>
+    <input z-input type="date" formControlName="dueDate" />
+  </label>
+  <div class="grid gap-3">
+    <span class="flex items-center gap-2 text-sm leading-none font-medium select-none">
+      Tags
+    </span>
+    <app-tag-input formControlName="tags" />
+  </div>
+</form>
