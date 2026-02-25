@@ -50,10 +50,6 @@ O fluxo: o usuario cria uma tarefa → grava no IDB com ID temporario → signal
 
 Quando a conexao volta, cada store faz reconciliacao: busca dados remotos, compara com locais, e mescla respeitando operacoes pendentes na fila. Isso garante que dados criados offline nao sejam sobrescritos.
 
-### Design system
-
-Componentes proprios com a lib `class-variance-authority` pra gerenciar variantes (tipo, tamanho, estado). O padrao segue o que o shadcn/ui faz mas adaptado pra Angular com signals e `ViewEncapsulation.None`.
-
 ## Como rodar
 
 ```bash
